@@ -1,56 +1,88 @@
-# Welcome to your Expo app 👋
+# Muzica
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A music player for Android and iOS that plays your **local files** and **free, full-length online music**, with an animated "orbit" player, light and dark themes, and smooth animations throughout.
 
-## Get started
+Built with Expo SDK 57, React Native, TypeScript, NativeWind and Zustand.
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Orbit player**: the cover spins like a vinyl record inside rotating rings with coloured dots circling them. The disc pulses while music plays and freezes in place when you pause. Pull the top half down to close the player.
+- **Waveform progress bar**: every track gets its own waveform, which fills with a cyan → violet → magenta gradient as it plays. Tap or drag anywhere on it to seek.
+- **Floating dock**: a capsule tab bar with a highlight that glides between tabs, and a mini player above it. Swipe the mini player left or right to skip tracks.
+- **Local music**: scans the device's audio files on Android. On every platform, tap **+** to import audio files; they're copied into app storage so they keep working offline.
+- **Online music**: trending tracks, genre filters and search, powered by the free [Audius](https://audius.co) API (no key required).
+- **Library**: liked songs, playlists you create, and listening history.
+- **Queue**: play next, add to queue, jump to or remove tracks, shuffle, and repeat (off / all / one).
+- **Light, dark and system themes**: switch with the sun/moon button on Home, or under Settings → Appearance.
+- **Background playback** with lock-screen controls.
+- **Remembered between launches**: your queue, likes, playlists, history and settings.
 
-2. Start the app
+## Getting started
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Requirements: Node 20+ and either Android Studio (for an emulator) or a physical device.
 
 ```bash
-npm run reset-project
+npm install
+npx expo run:android      # build and run a development build
+npx expo run:ios          # macOS only
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+You can also build in the cloud with `npx eas-cli@latest build --profile development`.
 
-### Other setup steps
+> **Expo Go isn't supported.** The app needs native configuration for background audio and media-library permissions, so it must run as a [development build](https://docs.expo.dev/develop/development-builds/introduction/).
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+After the first build, start the dev server with:
 
-## Learn more
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Platform notes
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+| | Android | iOS |
+| --- | --- | --- |
+| Device library scan | ✅ (asks for audio permission) | ❌ Apple keeps the Music library private |
+| Import audio files | ✅ | ✅ (from the Files app) |
+| Online streaming | ✅ | ✅ |
+| Background playback and lock screen | ✅ | ✅ |
 
-## Join the community
+## Project structure
 
-Join our community of developers creating universal apps.
+```
+src/
+├── app/                    # Expo Router screens
+│   ├── _layout.tsx         # root stack, theme, global sheets, audio engine
+│   ├── (tabs)/             # Home, Local, Online, Library + custom dock
+│   ├── player.tsx          # full-screen orbit player
+│   ├── playlist/[id].tsx   # playlist and Liked songs detail
+│   └── settings.tsx
+├── components/             # UI: orbit-disc, waveform, dock-bar, mini-player, sheets…
+├── store/                  # Zustand stores (player, library, local, settings, ui)
+├── lib/                    # audio player, Audius API, local file scanning, helpers
+├── hooks/                  # usePalette (theme colours for non-NativeWind styling)
+└── theme/palette.ts        # light/dark palettes and spectrum colours
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### How playback works
+
+- `lib/audio.ts` holds a single app-wide `expo-audio` player.
+- `store/player.ts` owns the queue, shuffle and repeat. Actions request a load by incrementing `loadKey`.
+- `components/player-engine.tsx` is a component that renders nothing. It loads tracks when `loadKey` changes, advances when a track ends, and mirrors the play and buffering state into the store. List rows read that state from the store, so they don't re-render on every progress tick.
+
+### Styling
+
+NativeWind (Tailwind) classes with `dark:` variants handle most styling. Colours that have to be passed as JavaScript values, such as gradients and icon colours, come from `usePalette()`. The theme is set with NativeWind's `colorScheme.set()` and saved in `store/settings.ts`.
+
+## Scripts
+
+```bash
+npm run start        # Expo dev server
+npm run android      # open on Android
+npm run ios          # open on iOS
+npm run lint         # ESLint (includes React Compiler rules)
+npx tsc --noEmit     # type-check
+```
+
+## Credits
+
+Online music is streamed from [Audius](https://audius.co), an open music network. All tracks belong to their respective artists.
