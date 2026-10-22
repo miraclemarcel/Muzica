@@ -2,6 +2,7 @@ import { useAudioPlayerStatus } from 'expo-audio';
 import { useEffect } from 'react';
 
 import { configureAudio, getPlayer } from '@/lib/audio';
+import { IS_EXPO_GO } from '@/lib/env';
 import { useLibraryStore } from '@/store/library';
 import { usePlayerStore } from '@/store/player';
 
@@ -28,14 +29,16 @@ export function PlayerEngine() {
       player.play();
       useLibraryStore.getState().pushRecent(track);
     }
-    try {
-      player.setActiveForLockScreen(
-        true,
-        { title: track.title, artist: track.artist, albumTitle: track.album, artworkUrl: track.artwork },
-        { showSeekBackward: true, showSeekForward: true },
-      );
-    } catch {
-      // Not available on every platform (e.g. web).
+    if (!IS_EXPO_GO) {
+      try {
+        player.setActiveForLockScreen(
+          true,
+          { title: track.title, artist: track.artist, albumTitle: track.album, artworkUrl: track.artwork },
+          { showSeekBackward: true, showSeekForward: true },
+        );
+      } catch {
+        // Not available on every platform (e.g. web).
+      }
     }
     // On cold start the persisted queue restores but loadKey is 0 — load without playing.
   }, [loadKey, player]);

@@ -39,8 +39,7 @@ export function ScreenTitle({
   return (
     <View className="flex-row items-end justify-between px-5 pb-4 pt-2">
       <View className="flex-1">
-        <View className="mb-1 flex-row items-center gap-2">
-          <View className="h-1.5 w-1.5 rounded-full bg-deep-cyan dark:bg-neon-cyan" />
+        <View className="mb-1">
           <Hud>{kicker}</Hud>
         </View>
         <Text className="text-[34px] font-extrabold tracking-tight text-ink dark:text-white">{title}</Text>

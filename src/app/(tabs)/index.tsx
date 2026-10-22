@@ -7,7 +7,6 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { Artwork } from '@/components/artwork';
 import { HoloFrame, Tile, TrackCard } from '@/components/cards';
-import { Glow } from '@/components/glow';
 import { PressableScale } from '@/components/pressable-scale';
 import { Screen } from '@/components/screen';
 import { Waveform } from '@/components/waveform';
@@ -44,10 +43,7 @@ function NowPlayingHero({ track }: { track: Track }) {
       <HoloFrame>
         <View className="p-4">
           <View className="mb-3 flex-row items-center justify-between">
-            <View className="flex-row items-center gap-2">
-              <View className="h-2 w-2 rounded-full bg-neon-magenta" />
-              <Hud>{isPlaying ? 'Transmitting now' : 'Paused in orbit'}</Hud>
-            </View>
+            <Hud>{isPlaying ? 'Transmitting now' : 'Paused in orbit'}</Hud>
             <Hud>{track.source === 'online' ? 'Online' : 'On device'}</Hud>
           </View>
           <View className="flex-row items-center gap-4">
@@ -82,7 +78,6 @@ function IdleHero({ trending }: { trending: Track[] | null }) {
   return (
     <HoloFrame>
       <View className="overflow-hidden p-5">
-        <Glow color={p.accent2} size={260} style={{ right: -90, top: -110 }} intensity={1.6} />
         <Hud>Signal idle</Hud>
         <Text className="mb-1 mt-2 text-[26px] font-extrabold leading-8 text-ink dark:text-white">
           Tune into{'\n'}something new.

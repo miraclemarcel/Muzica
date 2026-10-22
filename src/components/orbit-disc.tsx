@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, {
@@ -10,12 +11,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { Artwork, gradientFor } from '@/components/artwork';
-import { Glow } from '@/components/glow';
+import { Artwork } from '@/components/artwork';
 import { Spin } from '@/components/spin';
 import type { Palette } from '@/theme/palette';
-import { spectrum } from '@/theme/palette';
 import type { Track } from '@/types';
+
+const NOTE = 14;
 
 const RINGS = [
   { scale: 1.2, duration: 26000, reverse: false, dashed: false },
@@ -24,12 +25,11 @@ const RINGS = [
 ];
 
 /**
- * "Orbit" — the cover spins like a record while satellites trace the rings
+ * "Orbit" — the cover spins like a record while music notes ride the rings
  * around it. Everything breathes while music plays and settles when paused.
  */
 export function OrbitDisc({ track, playing, size, p }: { track: Track; playing: boolean; size: number; p: Palette }) {
   const disc = size / 1.7;
-  const [c1, c2] = gradientFor(track.id);
   const breath = useSharedValue(1);
 
   useEffect(() => {
@@ -52,9 +52,6 @@ export function OrbitDisc({ track, playing, size, p }: { track: Track; playing: 
 
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <Glow color={c1} size={size * 1.1} drift={9} intensity={p.scheme === 'dark' ? 1.4 : 0.9} />
-      <Glow color={c2} size={size * 0.8} drift={13} intensity={p.scheme === 'dark' ? 1.2 : 0.8} />
-
       <Animated.View style={[{ position: 'absolute', alignItems: 'center', justifyContent: 'center' }, ringsStyle]}>
         {RINGS.map((r, i) => {
           const d = disc * r.scale;
@@ -73,21 +70,9 @@ export function OrbitDisc({ track, playing, size, p }: { track: Track; playing: 
                 borderStyle: r.dashed ? 'dashed' : 'solid',
                 borderColor: p.faint,
               }}>
-              <View
-                style={{
-                  position: 'absolute',
-                  top: -4,
-                  left: d / 2 - 4,
-                  width: 8,
-                  height: 8,
-                  borderRadius: 4,
-                  backgroundColor: spectrum[i],
-                  shadowColor: spectrum[i],
-                  shadowOpacity: 1,
-                  shadowRadius: 8,
-                  elevation: 6,
-                }}
-              />
+              <View style={{ position: 'absolute', top: -NOTE / 2 - 1, left: d / 2 - NOTE / 2 }}>
+                <Ionicons name={i === 1 ? 'musical-notes' : 'musical-note'} size={NOTE} color={p.muted} />
+              </View>
             </Spin>
           );
         })}

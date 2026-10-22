@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
-import { View, type StyleProp, type ViewStyle } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useMemo } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -8,74 +9,74 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-type Props = {
-  color: string;
+import { seededRandom } from '@/lib/format';
+
+const GLYPHS = ['musical-note', 'musical-notes'] as const;
+const COUNT = 9;
+
+type NoteSpec = {
+  x: number;
   size: number;
-  style?: StyleProp<ViewStyle>;
-  intensity?: number;
-  /** Seconds for one slow drift cycle; 0 disables drifting. */
-  drift?: number;
+  duration: number;
+  phase: number;
+  sway: number;
+  spin: number;
+  glyph: (typeof GLYPHS)[number];
+  color: string;
+  opacity: number;
 };
 
-const RINGS = 7;
-
-/**
- * Soft radial glow approximated with stacked translucent circles —
- * no native blur needed, renders identically on every platform.
- */
-export function Glow({ color, size, style, intensity = 1, drift = 0 }: Props) {
+function FloatingNote({ spec, height }: { spec: NoteSpec; height: number }) {
   const t = useSharedValue(0);
 
   useEffect(() => {
-    if (!drift) return;
-    t.set(withRepeat(
-      withTiming(1, { duration: drift * 1000, easing: Easing.inOut(Easing.sin) }),
-      -1,
-      true,
-    ));
-  }, [drift, t]);
+    t.set(withRepeat(withTiming(1, { duration: spec.duration, easing: Easing.linear }), -1, false));
+  }, [spec.duration, t]);
 
-  const animated = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: (t.value - 0.5) * size * 0.25 },
-      { translateY: (0.5 - t.value) * size * 0.15 },
-      { scale: 0.9 + t.value * 0.2 },
-    ],
-  }));
+  const style = useAnimatedStyle(() => {
+    const p = (t.value + spec.phase) % 1;
+    // Fade in at the bottom, out near the top, so the loop never pops.
+    const fade = Math.min(1, p / 0.15, (1 - p) / 0.2);
+    return {
+      opacity: spec.opacity * Math.max(0, fade),
+      transform: [
+        { translateY: height * (1.05 - p * 1.2) },
+        { translateX: Math.sin(p * Math.PI * 4) * spec.sway },
+        { rotate: `${Math.sin(p * Math.PI * 2) * spec.spin}deg` },
+      ],
+    };
+  });
 
   return (
-    <Animated.View
-      pointerEvents="none"
-      style={[{ position: 'absolute', width: size, height: size }, style, animated]}>
-      {Array.from({ length: RINGS }, (_, i) => {
-        const s = size * (1 - i / RINGS);
-        return (
-          <View
-            key={i}
-            style={{
-              position: 'absolute',
-              left: (size - s) / 2,
-              top: (size - s) / 2,
-              width: s,
-              height: s,
-              borderRadius: s / 2,
-              backgroundColor: color,
-              opacity: 0.05 * intensity,
-            }}
-          />
-        );
-      })}
+    <Animated.View style={[{ position: 'absolute', left: spec.x, top: 0 }, style]}>
+      <Ionicons name={spec.glyph} size={spec.size} color={spec.color} />
     </Animated.View>
   );
 }
 
-/** Ambient backdrop of drifting colour fields used behind every screen. */
+/** Backdrop of music notes drifting slowly up the screen, used behind every page. */
 export function Ambient({ colors }: { colors: readonly string[] }) {
+  const { width, height } = useWindowDimensions();
+  const notes = useMemo(() => {
+    const rand = seededRandom(7);
+    return Array.from({ length: COUNT }, (_, i): NoteSpec => ({
+      x: ((i + rand() * 0.8) / COUNT) * (width - 24),
+      size: 14 + Math.round(rand() * 16),
+      duration: 16000 + rand() * 14000,
+      phase: rand(),
+      sway: 8 + rand() * 18,
+      spin: 10 + rand() * 20,
+      glyph: GLYPHS[i % GLYPHS.length],
+      color: colors[i % colors.length],
+      opacity: 0.12 + rand() * 0.1,
+    }));
+  }, [width, colors]);
+
   return (
     <View pointerEvents="none" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-      <Glow color={colors[0]} size={420} drift={14} style={{ top: -180, left: -160 }} />
-      <Glow color={colors[1]} size={360} drift={18} style={{ top: 120, right: -200 }} />
-      <Glow color={colors[2] ?? colors[0]} size={300} drift={22} style={{ bottom: -60, left: -80 }} intensity={0.7} />
+      {notes.map((spec, i) => (
+        <FloatingNote key={i} spec={spec} height={height} />
+      ))}
     </View>
   );
 }

@@ -8,7 +8,7 @@
     "scheme": "muzica",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
@@ -36,7 +36,12 @@
         {
           "backgroundColor": "#05060A",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#05060A",
+            "image": "./assets/images/splash-icon.png"
+          }
         }
       ],
       [
@@ -67,6 +72,7 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "backgroundColor": "#05060A"
   }
 }

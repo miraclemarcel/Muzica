@@ -3,12 +3,12 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ActivityIndicator, FlatList, Linking, Platform, RefreshControl, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { Glow } from '@/components/glow';
 import { Screen } from '@/components/screen';
 import { Spin } from '@/components/spin';
 import { TrackRow } from '@/components/track-row';
 import { DOCK_SPACE, EmptyState, GlowButton, Hud, IconButton, ScreenTitle, SearchField, type IconName } from '@/components/ui';
 import { usePalette } from '@/hooks/use-palette';
+import { IS_EXPO_GO } from '@/lib/env';
 import { importAudioFiles } from '@/lib/local-music';
 import { useLibraryStore } from '@/store/library';
 import { useLocalStore } from '@/store/local';
@@ -34,12 +34,15 @@ function Prompt({
   return (
     <Animated.View entering={FadeIn.duration(500)} className="items-center px-8 pt-10">
       <View className="mb-8 h-44 w-44 items-center justify-center">
-        <Glow color={p.accent2} size={260} drift={8} intensity={1.6} />
         <Spin active duration={14000} style={{ position: 'absolute', width: 176, height: 176, borderRadius: 88, borderWidth: 1, borderStyle: 'dashed', borderColor: p.faint }}>
-          <View style={{ position: 'absolute', top: -4, left: 84, width: 8, height: 8, borderRadius: 4, backgroundColor: p.accent }} />
+          <View style={{ position: 'absolute', top: -9, left: 79 }}>
+            <Ionicons name="musical-note" size={16} color={p.muted} />
+          </View>
         </Spin>
         <Spin active reverse duration={9000} style={{ position: 'absolute', width: 124, height: 124, borderRadius: 62, borderWidth: 1, borderColor: p.faint }}>
-          <View style={{ position: 'absolute', bottom: -4, left: 58, width: 8, height: 8, borderRadius: 4, backgroundColor: p.accent3 }} />
+          <View style={{ position: 'absolute', bottom: -8, left: 55 }}>
+            <Ionicons name="musical-notes" size={14} color={p.muted} />
+          </View>
         </Spin>
         <View className="h-20 w-20 items-center justify-center rounded-full border border-ink/10 bg-white dark:border-white/10 dark:bg-white/5">
           <Ionicons name={icon} size={32} color={p.accent} />
@@ -133,8 +136,12 @@ export default function Local() {
       gate = (
         <Prompt
           icon="construct"
-          title="Rebuild needed"
-          body="This build of Muzica doesn't include device-library access yet. Rebuild the app with `npx expo run:android` to scan your music."
+          title="Needs the Muzica app"
+          body={
+            IS_EXPO_GO
+              ? "Expo Go isn't allowed to read your music library. Install a development build of Muzica (npx expo run:android) and your songs appear here automatically."
+              : "This build of Muzica doesn't include music-library access yet. Rebuild it with npx expo run:android to scan your songs."
+          }
           action={null}
         />
       );

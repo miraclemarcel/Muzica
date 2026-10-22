@@ -43,7 +43,6 @@ function Control({ icon, onPress, label, active, badge }: { icon: IconName; onPr
       }}
       className="h-14 w-14 items-center justify-center">
       <Ionicons name={icon} size={24} color={active ? p.accent : p.text} />
-      {active ? <View className="absolute bottom-2 h-1 w-1 rounded-full bg-deep-cyan dark:bg-neon-cyan" /> : null}
       {badge ? (
         <Text style={{ fontFamily: mono }} className="absolute right-2.5 top-2.5 text-[9px] font-bold text-deep-cyan dark:text-neon-cyan">
           {badge}

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { applyTheme } from '@/lib/theme';
 import { persistStorage } from '@/store/storage';
 import type { ThemeMode } from '@/types';
 
@@ -16,7 +17,10 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       theme: 'dark',
       haptics: true,
-      setTheme: (theme) => set({ theme }),
+      setTheme: (theme) => {
+        applyTheme(theme);
+        set({ theme });
+      },
       setHaptics: (haptics) => set({ haptics }),
     }),
     {
@@ -28,6 +32,9 @@ export const useSettingsStore = create<SettingsState>()(
         const state = persisted as Partial<SettingsState>;
         if (version < 1 && state.theme === 'system') state.theme = 'dark';
         return state as SettingsState;
+      },
+      onRehydrateStorage: () => (state) => {
+        if (state) applyTheme(state.theme);
       },
     },
   ),

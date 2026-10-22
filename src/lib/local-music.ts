@@ -2,6 +2,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { Directory, File, Paths } from 'expo-file-system';
 import { Platform } from 'react-native';
 
+import { IS_EXPO_GO } from '@/lib/env';
 import { parseFilename, uid } from '@/lib/format';
 import type { Track } from '@/types';
 
@@ -12,6 +13,8 @@ export class MediaLibraryUnavailableError extends Error {}
  * so a missing module must disable device scanning rather than crash at import.
  */
 async function loadMediaLibrary() {
+  // Expo Go can't be granted full media-library access on Android.
+  if (IS_EXPO_GO) throw new MediaLibraryUnavailableError('Expo Go');
   try {
     return await import('expo-media-library/legacy');
   } catch (e) {

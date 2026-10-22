@@ -14,7 +14,7 @@ import { tap } from '@/lib/haptics';
 type TabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
 
 const TABS: Record<string, { label: string; icon: IconName; active: IconName }> = {
-  index: { label: 'Home', icon: 'planet-outline', active: 'planet' },
+  index: { label: 'Home', icon: 'home-outline', active: 'home' },
   local: { label: 'Local', icon: 'phone-portrait-outline', active: 'phone-portrait' },
   online: { label: 'Online', icon: 'cloud-outline', active: 'cloud' },
   library: { label: 'Library', icon: 'albums-outline', active: 'albums' },

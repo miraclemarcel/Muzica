@@ -4,7 +4,6 @@ import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 
 import { gradientFor } from '@/components/artwork';
 import { LikedCover, PlaylistCover } from '@/components/cards';
-import { Glow } from '@/components/glow';
 import { Screen } from '@/components/screen';
 import { TrackRow } from '@/components/track-row';
 import { EmptyState, GlowButton, Hud, IconButton } from '@/components/ui';
@@ -47,7 +46,6 @@ export default function PlaylistScreen() {
       </View>
       <View className="items-center px-6 pb-6 pt-2">
         <View className="items-center justify-center">
-          <Glow color={glow[0]} size={320} intensity={p.scheme === 'dark' ? 1.5 : 1} drift={10} />
           <Animated.View entering={ZoomIn.springify().damping(14)}>
             {isLiked ? <LikedCover size={190} /> : <PlaylistCover seed={id} tracks={tracks} size={190} />}
           </Animated.View>

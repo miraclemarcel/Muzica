@@ -16,7 +16,7 @@ export function CreatePlaylistDialog() {
 
   const submit = () => {
     const playlist = useLibraryStore.getState().createPlaylist(name, dialog?.track);
-    toast(dialog?.track ? `Added to ${playlist.name}` : `Created ${playlist.name}`, 'sparkles');
+    toast(dialog?.track ? `Added to ${playlist.name}` : `Created ${playlist.name}`, 'checkmark-circle');
     setName('');
     close();
   };
@@ -38,7 +38,7 @@ export function CreatePlaylistDialog() {
             returnKeyType="done"
             className="mb-5 h-14 rounded-2xl border border-ink/10 bg-ink/5 px-4 text-[16px] font-semibold text-ink dark:border-white/10 dark:bg-white/5 dark:text-white"
           />
-          <GlowButton label="Create playlist" icon="sparkles" onPress={submit} />
+          <GlowButton label="Create playlist" onPress={submit} />
         </View>
       </KeyboardAvoidingView>
     </Sheet>
