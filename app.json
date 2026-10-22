@@ -24,7 +24,16 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.miraclemarcel.muzica"
+      "package": "com.miraclemarcel.muzica",
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.READ_MEDIA_AUDIO"
+      ]
     },
     "web": {
       "output": "single",
@@ -81,6 +90,15 @@
       "translucent": true,
       "backgroundColor": "#00000000",
       "barStyle": "light-content"
+    },
+    "extra": {
+      "router": {},
+      "expo-status-bar": {
+        "style": "light"
+      },
+      "eas": {
+        "projectId": "0918ab46-b816-4fe1-b40e-06c36a1b21b9"
+      }
     }
   }
 }
