@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAudioPlayerStatus } from 'expo-audio';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { Artwork } from '@/components/artwork';
@@ -117,6 +117,8 @@ export default function Home() {
   const [trending, setTrending] = useState<Track[] | null>(null);
 
   useEffect(() => {
+    // Silent check — only scans if music access was already granted.
+    if (Platform.OS === 'android') useLocalStore.getState().init();
     fetchTrending(undefined, 16)
       .then(setTrending)
       .catch(() => setTrending([]));

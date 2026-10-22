@@ -1,20 +1,43 @@
 import * as DocumentPicker from 'expo-document-picker';
 import { Directory, File, Paths } from 'expo-file-system';
-import { requestPermissionsAsync } from 'expo-media-library';
-import { getAssetsAsync, MediaType, SortBy } from 'expo-media-library/legacy';
 import { Platform } from 'react-native';
 
 import { parseFilename, uid } from '@/lib/format';
 import type { Track } from '@/types';
 
-export async function requestAudioPermission() {
-  if (Platform.OS === 'web') return false;
+export class MediaLibraryUnavailableError extends Error {}
+
+/**
+ * Loaded lazily: the native module only exists in development/production builds,
+ * so a missing module must disable device scanning rather than crash at import.
+ */
+async function loadMediaLibrary() {
+  try {
+    return await import('expo-media-library/legacy');
+  } catch (e) {
+    throw new MediaLibraryUnavailableError(String(e));
+  }
+}
+
+export type AudioPermission = { granted: boolean; canAskAgain: boolean };
+
+/** Checks access without prompting. */
+export async function getAudioPermission(): Promise<AudioPermission> {
+  const { getPermissionsAsync } = await loadMediaLibrary();
+  const res = await getPermissionsAsync(false, ['audio']);
+  return { granted: res.granted, canAskAgain: res.canAskAgain };
+}
+
+/** Shows the system prompt (READ_MEDIA_AUDIO on Android 13+). */
+export async function requestAudioPermission(): Promise<AudioPermission> {
+  const { requestPermissionsAsync } = await loadMediaLibrary();
   const res = await requestPermissionsAsync(false, ['audio']);
-  return res.granted;
+  return { granted: res.granted, canAskAgain: res.canAskAgain };
 }
 
 /** Reads every audio file the OS media index knows about (Android; iOS exposes none here). */
 export async function scanDeviceAudio(max = 3000): Promise<Track[]> {
+  const { getAssetsAsync, MediaType, SortBy } = await loadMediaLibrary();
   const out: Track[] = [];
   let after: string | undefined;
   while (out.length < max) {

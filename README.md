@@ -9,7 +9,7 @@ Built with Expo SDK 57, React Native, TypeScript, NativeWind and Zustand.
 - **Orbit player**: the cover spins like a vinyl record inside rotating rings with coloured dots circling them. The disc pulses while music plays and freezes in place when you pause. Pull the top half down to close the player.
 - **Waveform progress bar**: every track gets its own waveform, which fills with a cyan → violet → magenta gradient as it plays. Tap or drag anywhere on it to seek.
 - **Floating dock**: a capsule tab bar with a highlight that glides between tabs, and a mini player above it. Swipe the mini player left or right to skip tracks.
-- **Local music**: scans the device's audio files on Android. On every platform, tap **+** to import audio files; they're copied into app storage so they keep working offline.
+- **Local music**: on Android, grant access once and every song on the device is listed automatically, with search, play all, shuffle and pull-to-refresh. On iOS, where Apple keeps the Music library private, you can pick any number of songs from Files at once.
 - **Online music**: trending tracks, genre filters and search, powered by the free [Audius](https://audius.co) API (no key required).
 - **Library**: liked songs, playlists you create, and listening history.
 - **Queue**: play next, add to queue, jump to or remove tracks, shuffle, and repeat (off / all / one).
@@ -37,14 +37,6 @@ After the first build, start the dev server with:
 npx expo start
 ```
 
-## Platform notes
-
-| | Android | iOS |
-| --- | --- | --- |
-| Device library scan | ✅ (asks for audio permission) | ❌ Apple keeps the Music library private |
-| Import audio files | ✅ | ✅ (from the Files app) |
-| Online streaming | ✅ | ✅ |
-| Background playback and lock screen | ✅ | ✅ |
 
 ## Project structure
 
