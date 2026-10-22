@@ -4,10 +4,9 @@ import '@/lib/theme';
 
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
 import { useEffect, useState } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform, StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { AppSplash } from '@/components/app-splash';
@@ -50,13 +49,22 @@ export default function RootLayout() {
     SystemUI.setBackgroundColorAsync(p.bg).catch(() => {});
   }, [p.bg]);
 
-  // Transparent status bar (edge-to-edge): white icons in dark mode, black in light.
+  // The app draws behind a fully transparent status bar: white icons in dark mode,
+  // black in light. Android only does this automatically on 15+, so below that the
+  // bar must be made translucent + transparent explicitly or it stays a solid strip.
   // The splash is always dark, so keep white icons until it's gone.
-  const barStyle = !splashDone || isDark ? 'light' : 'dark';
+  const barStyle = !splashDone || isDark ? 'light-content' : 'dark-content';
   useEffect(() => {
-    StatusBar.setStyle(barStyle, true);
+    const apply = () => {
+      if (Platform.OS === 'android') {
+        StatusBar.setTranslucent(true);
+        StatusBar.setBackgroundColor('transparent');
+      }
+      StatusBar.setBarStyle(barStyle, true);
+    };
+    apply();
     const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') StatusBar.setStyle(barStyle, false);
+      if (state === 'active') apply();
     });
     return () => sub.remove();
   }, [barStyle]);
@@ -84,7 +92,7 @@ export default function RootLayout() {
         <QueueSheet />
         <CreatePlaylistDialog />
         <Toast />
-        <StatusBar style={barStyle} animated />
+        <StatusBar translucent backgroundColor="transparent" barStyle={barStyle} animated />
         {!splashDone ? <AppSplash ready={hydrated} onDone={() => setSplashDone(true)} /> : null}
       </ThemeProvider>
     </GestureHandlerRootView>

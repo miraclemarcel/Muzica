@@ -33,10 +33,9 @@
       <stop offset="1" stop-color="#FF3DCB"/>
     </linearGradient>
     <filter id="i-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="50.400000000000006"/></filter>
-    <filter id="i-dotglow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="14.4"/></filter>
     <mask id="i-cut"><rect width="100%" height="100%" fill="#fff"/><g fill="#000"><rect x="368.72" y="470.15" width="38.88" height="83.69999999999999" rx="19.44"/><rect x="430.64000000000004" y="433.88" width="38.88" height="156.24" rx="19.44"/><rect x="492.56000000000006" y="397.61" width="38.88" height="228.77999999999997" rx="19.44"/><rect x="554.48" y="433.88" width="38.88" height="156.24" rx="19.44"/><rect x="616.4000000000001" y="470.15" width="38.88" height="83.69999999999999" rx="19.44"/></g></mask>
   </defs>
-  <circle cx="512" cy="512" r="256.67999999999995" fill="#8B6CFF" opacity="0.55" filter="url(#i-blur)"/>
+
   <g transform="translate(512 512) rotate(-20)" fill="none" stroke="url(#i-ring)" stroke-width="21.599999999999998" stroke-linecap="round">
     <ellipse rx="352.8" ry="127.008" opacity="0.55"/>
   </g>
@@ -46,6 +45,10 @@
   </g>
   <g transform="translate(512 512) rotate(-20)">
     <path d="M -352.8 0 A 352.8 127.008 0 0 0 352.8 0" fill="none" stroke="url(#i-ring)" stroke-width="21.599999999999998" stroke-linecap="round"/>
-    <circle cx="278.0101938724515" cy="78.19393265816119" r="36" fill="#FF3DCB" opacity="0.8" filter="url(#i-dotglow)"/>
-    <circle cx="278.0101938724515" cy="78.19393265816119" r="23.04" fill="#fff"/>
+    
+    <g transform="translate(278.0101938724515 78.19393265816119) rotate(20)">
+      <ellipse cx="-14.688" cy="36.72" rx="24.480000000000004" ry="17.748" transform="rotate(-20 -14.688 36.72)" fill="#fff"/>
+      <rect x="4.896" y="-58.752" width="9.18" height="97.92000000000002" rx="3.672" fill="#fff"/>
+      <path d="M 9.792 -56.304 C 36.72 -41.61600000000001, 51.408 -22.032, 36.72 7.344" fill="none" stroke="#fff" stroke-width="9.18" stroke-linecap="round"/>
+    </g>
   </g></svg>

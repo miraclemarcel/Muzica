@@ -74,7 +74,6 @@ function NowPlayingHero({ track }: { track: Track }) {
 }
 
 function IdleHero({ trending }: { trending: Track[] | null }) {
-  const p = usePalette();
   return (
     <HoloFrame>
       <View className="overflow-hidden p-5">

@@ -7,14 +7,12 @@ import { LikedCover, PlaylistCover } from '@/components/cards';
 import { Screen } from '@/components/screen';
 import { TrackRow } from '@/components/track-row';
 import { EmptyState, GlowButton, Hud, IconButton } from '@/components/ui';
-import { usePalette } from '@/hooks/use-palette';
 import { formatTotal } from '@/lib/format';
 import { resolveTracks, useLibraryStore } from '@/store/library';
 import { usePlayerStore } from '@/store/player';
 import { spectrum } from '@/theme/palette';
 
 export default function PlaylistScreen() {
-  const p = usePalette();
   const { id } = useLocalSearchParams<{ id: string }>();
   const isLiked = id === 'liked';
   const catalog = useLibraryStore((s) => s.catalog);

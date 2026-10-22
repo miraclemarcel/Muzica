@@ -73,6 +73,11 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#05060A"
+    "backgroundColor": "#05060A",
+    "androidStatusBar": {
+      "translucent": true,
+      "backgroundColor": "#00000000",
+      "barStyle": "light-content"
+    }
   }
 }
