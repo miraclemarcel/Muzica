@@ -10,7 +10,7 @@ import { EmptyState, GlowButton, Hud, IconButton } from '@/components/ui';
 import { formatTotal } from '@/lib/format';
 import { resolveTracks, useLibraryStore } from '@/store/library';
 import { usePlayerStore } from '@/store/player';
-import { spectrum } from '@/theme/palette';
+import { spectrum } from '@/theme/palette'; 
 
 export default function PlaylistScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

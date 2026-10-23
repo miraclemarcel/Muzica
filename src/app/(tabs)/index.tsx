@@ -7,7 +7,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { Artwork } from '@/components/artwork';
 import { HoloFrame, Tile, TrackCard } from '@/components/cards';
-import { PressableScale } from '@/components/pressable-scale';
+import { PressableScale } from '@/components/pressable-scale'; 
 import { Screen } from '@/components/screen';
 import { Waveform } from '@/components/waveform';
 import { DOCK_SPACE, GlowButton, Hud, IconButton, SectionHeader } from '@/components/ui';
